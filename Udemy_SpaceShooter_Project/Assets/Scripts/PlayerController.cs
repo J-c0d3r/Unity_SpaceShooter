@@ -5,8 +5,10 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+    public float velocRot = 50f;
 
-    private int life = 5;
+
+    [SerializeField] private int life = 5;
     private float veloc = 10f;
     private float horizontal;
     private float vertical;
@@ -55,16 +57,101 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        horizontal = Input.GetAxis("Horizontal");
+        horizontal = Input.GetAxis("Mouse X");
         vertical = Input.GetAxis("Vertical");
-        Vector2 newVeloc = new Vector2(horizontal, vertical);
-        newVeloc.Normalize();
-        playerRB.velocity = newVeloc * veloc;
 
-        float playerX = Mathf.Clamp(transform.position.x, -xLimit, xLimit);
-        float playerY = Mathf.Clamp(transform.position.y, -yLimit, yLimit);
+        if (vertical != 0)
+        {
+            transform.position += transform.up * Time.deltaTime * veloc * vertical;
+        }
 
-        transform.position = new Vector3(playerX, playerY, transform.position.z);
+
+        //if (vertical != 0)
+        //{
+        //    //Vector2 newVeloc = new Vector2(transform.position.x + vertical, transform.position.y + vertical);
+
+        //    Vector2 newVeloc = transform.forward * veloc;
+
+        //    newVeloc.Normalize();
+        //    playerRB.velocity = newVeloc * veloc;
+        //}
+        //else
+        //{
+        //    playerRB.velocity = Vector2.zero;
+        //}
+
+        ////////////////////////////////////////////////////
+
+        //else
+        //{
+        //    playerRB.velocity = Vector3.zero;
+        //}
+
+        //if (vertical < 0)
+        //{
+        //    transform.position -= transform.up * Time.deltaTime * veloc * vertical;
+        //}
+
+
+
+        ////////////////////////////////////////////////////
+        //if (horizontal != 0)
+        //{
+        //    Vector3 newRot = Vector3.forward * horizontal * velocRot * Time.deltaTime;
+
+        //    newRot.Normalize();
+
+        //    //playerRB.MoveRotation(Quaternion.Euler(newRot));
+
+        //    //transform.Rotate(Vector3.forward * horizontal * velocRot * Time.deltaTime);
+        //    transform.Rotate(newRot);
+
+        //}
+
+
+        //if(ver < 0)
+
+
+        if (vertical < 0 && horizontal > 0)
+        {
+            //transform.position += transform.up * Time.deltaTime * veloc * vertical;
+
+            Vector3 newRot = Vector3.forward * -horizontal * velocRot * Time.deltaTime;
+            newRot.Normalize();
+
+            //playerRB.MoveRotation(Quaternion.Euler(newRot));
+
+            //transform.Rotate(Vector3.forward * horizontal * velocRot * Time.deltaTime);
+            transform.Rotate(newRot);
+
+        }
+
+        if (vertical < 0 && horizontal < 0)
+        {
+            //transform.position += transform.up * Time.deltaTime * veloc * vertical;
+
+            Vector3 newRot = Vector3.forward * -horizontal * velocRot * Time.deltaTime;
+            newRot.Normalize();
+
+            //playerRB.MoveRotation(Quaternion.Euler(newRot));
+
+            //transform.Rotate(Vector3.forward * horizontal * velocRot * Time.deltaTime);
+            transform.Rotate(newRot);
+
+        }
+
+
+
+        //horizontal = Input.GetAxis("Horizontal");
+        //vertical = Input.GetAxis("Vertical");
+        //Vector2 newVeloc = new Vector2(horizontal, vertical);
+        //newVeloc.Normalize();
+        //playerRB.velocity = newVeloc * veloc;
+
+        //    float playerX = Mathf.Clamp(transform.position.x, -xLimit, xLimit);
+        //    float playerY = Mathf.Clamp(transform.position.y, -yLimit, yLimit);
+
+        //    transform.position = new Vector3(playerX, playerY, transform.position.z);
     }
 
     private void Shield()
@@ -131,7 +218,10 @@ public class PlayerController : MonoBehaviour
     private void ShootCreate(GameObject createdShoot, Vector3 position)
     {
         GameObject shoot = Instantiate(createdShoot, position, transform.rotation);
-        shoot.GetComponent<Rigidbody2D>().velocity = new Vector2(0f, shootVeloc);
+        shoot.GetComponent<Rigidbody2D>().velocity = new Vector3(shootVeloc, shootVeloc, shootVeloc);
+
+        //GameObject shoot = Instantiate(createdShoot, position, transform.rotation);
+        //shoot.GetComponent<Rigidbody2D>().velocity = new Vector2(0f, shootVeloc);
     }
 
     public void TakeLife(int damage)
